@@ -763,7 +763,6 @@ async function startSite() {
 }
 
 startSite();
-</script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js")
@@ -771,5 +770,9 @@ if ("serviceWorker" in navigator) {
       .catch(error => console.error("Erreur :", error));
   });
 }
+</script>
+</body>
+</html>
+</script>
 </body>
 </html>
