@@ -1,185 +1,469 @@
-‎<!DOCTYPE html>
-‎<html lang="fr">
-‎<head>
-‎  <meta charset="UTF-8">
-‎  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-‎  <meta name="theme-color" content="#f47721">
-‎  <title>Zaamarket - La marketplace africaine</title>
-‎  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-‎  <style>
-‎    * { box-sizing: border-box; }
-‎    body {
-‎      margin: 0;
-‎      font-family: Arial, sans-serif;
-‎      background: #f7f7f7;
-‎      color: #171717;
-‎    }
-‎    header {
-‎      background: #171717;
-‎      color: white;
-‎      padding: 18px 5%;
-‎    }
-‎    .logo { font-size: 27px; font-weight: bold; }
-‎    .logo span { color: #f47721; }
-‎    .slogan { font-size: 12px; color: #ddd; margin-top: 5px; }
-‎    nav {
-‎      display: flex;
-‎      gap: 18px;
-‎      overflow-x: auto;
-‎      padding: 14px 5%;
-‎      background: white;
-‎      border-bottom: 1px solid #eee;
-‎    }
-‎    nav a {
-‎      color: #222;
-‎      text-decoration: none;
-‎      white-space: nowrap;
-‎      font-size: 14px;
-‎      font-weight: bold;
-‎    }
-‎    .hero {
-‎      margin: 18px auto;
-‎      width: 90%;
-‎      padding: 35px 22px;
-‎      background: #171717;
-‎      color: white;
-‎      border-radius: 12px;
-‎    }
-‎    .hero h1 { font-size: 27px; margin: 0 0 12px; }
-‎    .hero h1 span { color: #f47721; }
-‎    .hero p { line-height: 1.6; color: #ddd; }
-‎    .hero button, .action {
-‎      background: #f47721;
-‎      color: white;
-‎      border: 0;
-‎      border-radius: 6px;
-‎      padding: 12px 18px;
-‎      font-weight: bold;
-‎      cursor: pointer;
-‎    }
-‎    main { width: 90%; margin: 25px auto; }
-‎    h2 { font-size: 21px; }
-‎    .categories {
-‎      display: grid;
-‎      grid-template-columns: repeat(2, 1fr);
-‎      gap: 12px;
-‎    }
-‎    .category {
-‎      background: white;
-‎      padding: 18px 10px;
-‎      border-radius: 9px;
-‎      text-align: center;
-‎      border: 1px solid #eee;
-‎      font-weight: bold;
-‎    }
-‎    .category div { font-size: 27px; margin-bottom: 8px; }
-‎    .products {
-‎      display: grid;
-‎      grid-template-columns: repeat(2, minmax(0, 1fr));
-‎      gap: 12px;
-‎    }
-‎    .product {
-‎      background: white;
-‎      border-radius: 9px;
-‎      overflow: hidden;
-‎      border: 1px solid #eee;
-‎    }
-‎    .product img {
-‎      width: 100%;
-‎      height: 135px;
-‎      object-fit: cover;
-‎      background: #eee;
-‎    }
-‎    .product-info { padding: 10px; }
-‎    .product h3 { font-size: 14px; margin: 0 0 8px; }
-‎    .price { color: #f47721; font-weight: bold; }
-‎    .muted { color: #777; font-size: 13px; }
-‎    #message { color: #666; font-size: 14px; }
-‎    footer {
-‎      margin-top: 40px;
-‎      padding: 25px 5%;
-‎      background: #171717;
-‎      color: white;
-‎      text-align: center;
-‎      font-size: 13px;
-‎    }
-‎    @media (min-width: 700px) {
-‎      .categories { grid-template-columns: repeat(4, 1fr); }
-‎      .products { grid-template-columns: repeat(4, 1fr); }
-‎      .hero { padding: 55px; }
-‎    }
-‎  </style>
-‎</head>
-‎<body>
-‎  <header>
-‎    <div class="logo">ZAA<span>MARKET</span></div>
-‎    <div class="slogan">La marketplace africaine</div>
-‎  </header>
-‎
-‎  <nav>
-‎    <a href="#accueil">Accueil</a>
-‎    <a href="#categories">Catégories</a>
-‎    <a href="#produits">Produits</a>
-‎    <a href="#connexion">Connexion</a>
-‎    <a href="#vendeur">Devenir vendeur</a>
-‎    <a href="#contact">Contact</a>
-‎  </nav>
-‎
-‎  <section class="hero" id="accueil">
-‎    <h1>Bienvenue sur <span>Zaamarket</span></h1>
-‎    <p>Découvrez une grande variété de produits à des prix accessibles, partout en Afrique de l'Ouest.</p>
-‎    <button onclick="document.getElementById('produits').scrollIntoView({behavior:'smooth'})">
-‎      Découvrir les produits
-‎    </button>
-‎  </section>
-‎
-‎  <main>
-‎    <section id="categories">
-‎      <h2>Nos catégories</h2>
-‎      <div class="categories" id="category-list">
-‎        <div class="category"><div>👗</div>Mode et vêtements</div>
-‎        <div class="category"><div>👟</div>Chaussures</div>
-‎        <div class="category"><div>💄</div>Beauté et cosmétiques</div>
-‎        <div class="category"><div>📱</div>Téléphones et accessoires</div>
-‎        <div class="category"><div>🏠</div>Maison et cuisine</div>
-‎        <div class="category"><div>🎒</div>Accessoires</div>
-‎      </div>
-‎    </section>
-‎
-‎    <section id="produits">
-‎      <h2>Nos produits</h2>
-‎      <p id="message">Les produits seront affichés ici.</p>
-‎      <div class="products" id="product-list"></div>
-‎    </section>
-‎
-‎    <section id="connexion">
-‎      <h2>Connexion</h2>
-‎      <p class="muted">L'espace client sera activé dans la prochaine étape.</p>
-‎    </section>
-‎
-‎    <section id="vendeur">
-‎      <h2>Devenir vendeur</h2>
-‎      <p class="muted">Inscrivez votre boutique sur Zaamarket. Les inscriptions seront soumises à validation.</p>
-‎    </section>
-‎
-‎    <section id="contact">
-‎      <h2>Contact</h2>
-‎      <p class="muted">Une question ? Notre espace de contact sera bientôt disponible.</p>
-‎    </section>
-‎  </main>
-‎
-‎  <footer>
-‎    <strong>Zaamarket</strong><br>
-‎    La marketplace africaine<br><br>
-‎    © 2026 Zaamarket. Tous droits réservés.
-‎  </footer>
-‎
-‎  <script>
-‎    // Les identifiants Supabase seront ajoutés à l'étape suivante.
-‎const SUPABASE_URL = "https://xdbrxowpqymjmtqesohh.supabase.co";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#171717">
+<title>Zaamarket - La marketplace africaine</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;color:#171717}
+header{background:#171717;color:white;padding:20px 5%}
+.logo{font-size:28px;font-weight:900}
+.logo span{color:#f47721}
+header p{margin:5px 0 0;color:#ddd;font-size:13px}
+nav{display:flex;gap:20px;overflow-x:auto;background:white;padding:15px 5%;border-bottom:1px solid #eee}
+nav a{color:#222;text-decoration:none;white-space:nowrap;font-size:14px;font-weight:bold}
+nav a:hover{color:#f47721}
+.hero{background:#171717;color:white;width:90%;max-width:1200px;margin:25px auto;padding:40px 25px;border-radius:14px}
+.hero h1{font-size:32px;margin:0 0 12px}
+.hero h1 span{color:#f47721}
+.hero p{line-height:1.6;color:#ddd}
+button,.btn{background:#f47721;color:white;border:0;border-radius:7px;padding:12px 17px;font-weight:bold;cursor:pointer}
+button:hover,.btn:hover{background:#d85f12}
+main{width:90%;max-width:1200px;margin:30px auto}
+section{margin-bottom:38px}
+h2{font-size:22px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.category,.product,.panel{background:white;border:1px solid #eee;border-radius:10px;padding:16px}
+.category{text-align:center;font-weight:bold}
+.category div{font-size:28px;margin-bottom:8px}
+.product{padding:0;overflow:hidden}
+.product img{width:100%;height:145px;object-fit:cover;background:#eee}
+.product-info{padding:12px}
+.product h3{font-size:15px}
+.price{color:#f47721;font-weight:bold}
+form{background:white;padding:18px;border:1px solid #eee;border-radius:10px;margin:12px 0}
+input,textarea,select{width:100%;padding:12px;margin:7px 0 14px;border:1px solid #ddd;border-radius:6px;font-size:15px}
+textarea{min-height:75px}
+label{font-size:14px;font-weight:bold}
+.muted{color:#777;font-size:13px}
+.message{padding:12px;background:#fff3e9;border-radius:7px;margin:12px 0;font-size:14px}
+.item{background:white;padding:14px;border:1px solid #eee;border-radius:8px;margin:10px 0}
+.item button{margin:5px 5px 5px 0}
+footer{background:#171717;color:white;text-align:center;padding:28px 5%;font-size:13px}
+.hidden{display:none!important}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hero{padding:60px}}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">ZAA<span>MARKET</span></div>
+ <p>La marketplace africaine — Des prix accessibles pour tous</p>
+</header>
+
+<nav>
+ <a href="#accueil">Accueil</a>
+ <a href="#categories">Catégories</a>
+ <a href="#produits">Produits</a>
+ <a href="#compte">Connexion</a>
+ <a href="#vendeur">Devenir vendeur</a>
+ <a href="#administration">Administration</a>
+ <a href="#panier">Panier</a>
+</nav>
+
+<section class="hero" id="accueil">
+ <h1>Bienvenue sur <span>Zaamarket</span></h1>
+ <p>Découvrez des produits variés à des prix accessibles, partout en Afrique de l'Ouest.</p>
+ <button onclick="document.getElementById('produits').scrollIntoView({behavior:'smooth'})">Découvrir les produits</button>
+</section>
+
+<main>
+<section id="categories">
+ <h2>Nos catégories</h2>
+ <div class="grid" id="category-list">
+  <p>Chargement des catégories...</p>
+ </div>
+</section>
+
+<section id="produits">
+ <h2>Nos produits</h2>
+ <div id="product-message" class="muted">Chargement des produits...</div>
+ <div class="grid" id="product-list"></div>
+</section>
+
+<section id="compte">
+ <h2>Mon compte</h2>
+ <div id="account-status" class="message">Vous n'êtes pas connecté.</div>
+ <div id="auth-forms">
+  <form id="signup-form">
+   <h3>Créer un compte</h3>
+   <label>Nom complet</label>
+   <input id="signup-name" required placeholder="Votre nom complet">
+   <label>Téléphone</label>
+   <input id="signup-phone" placeholder="Votre numéro de téléphone">
+   <label>Pays</label>
+   <input id="signup-country" value="Burkina Faso" required>
+   <label>Adresse e-mail</label>
+   <input id="signup-email" type="email" required placeholder="Votre e-mail">
+   <label>Mot de passe</label>
+   <input id="signup-password" type="password" minlength="6" required placeholder="Au moins 6 caractères">
+   <button type="submit">Créer mon compte</button>
+  </form>
+  <form id="login-form">
+   <h3>Se connecter</h3>
+   <label>Adresse e-mail</label>
+   <input id="login-email" type="email" required>
+   <label>Mot de passe</label>
+   <input id="login-password" type="password" required>
+   <button type="submit">Connexion</button>
+  </form>
+ </div>
+ <button id="logout-button" class="hidden">Se déconnecter</button>
+ <div id="auth-message" class="message hidden"></div>
+</section>
+
+<section id="vendeur">
+ <h2>Devenir vendeur</h2>
+ <p class="muted">Proposez vos produits sur Zaamarket. Votre boutique sera vérifiée avant son ouverture.</p>
+ <form id="store-form">
+  <label>Nom de votre boutique</label>
+  <input id="store-name" required>
+  <label>Description de votre boutique</label>
+  <textarea id="store-description"></textarea>
+  <button type="submit">Envoyer ma demande</button>
+ </form>
+ <div id="store-message" class="message hidden"></div>
+</section>
+
+<section id="seller-products">
+ <h2>Mes produits vendeur</h2>
+ <form id="product-form">
+  <label>Ma boutique</label>
+  <select id="seller-store" required></select>
+  <label>Nom du produit</label>
+  <input id="new-product-name" required>
+  <label>Description</label>
+  <textarea id="new-product-description"></textarea>
+  <label>Catégorie</label>
+  <select id="new-product-category" required></select>
+  <label>Prix en FCFA</label>
+  <input id="new-product-price" type="number" min="1" required>
+  <label>Adresse de l'image (URL)</label>
+  <input id="new-product-image" type="url" placeholder="https://...">
+  <label>Stock disponible</label>
+  <input id="new-product-stock" type="number" min="0" value="0">
+  <button type="submit">Soumettre le produit</button>
+ </form>
+ <div id="seller-message" class="message hidden"></div>
+</section>
+
+<section id="administration">
+ <h2>Administration Zaamarket</h2>
+ <p class="muted">Réservé au compte administrateur autorisé.</p>
+ <button id="admin-load">Ouvrir le tableau de bord</button>
+ <div id="admin-message" class="message hidden"></div>
+ <h3>Demandes de boutiques</h3>
+ <div id="admin-stores"></div>
+ <h3>Produits en attente</h3>
+ <div id="admin-products"></div>
+ <h3>Commandes</h3>
+ <div class="muted">La gestion des commandes sera ajoutée dans une prochaine étape.</div>
+</section>
+
+<section id="panier">
+ <h2>Mon panier</h2>
+ <div id="cart-list"></div>
+ <p id="cart-total"><strong>Total : 0 FCFA</strong></p>
+ <p class="muted">Le paiement et la validation des commandes seront activés après la mise en place du processus de commande sécurisé.</p>
+</section>
+</main>
+
+<footer>
+ <strong>Zaamarket</strong><br>
+ La marketplace africaine<br><br>
+ © 2026 Zaamarket. Tous droits réservés.
+</footer>
+
+<script>
+const SUPABASE_URL = "https://xdbrxowpqymjmtqesohh.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_e60dqdlS0-iGOSX0MC-uWA_Rz7NPlfM";
-‎
-‎    // La connexion à Supabase sera activée après configuration.
-‎  </script>
-‎</body>
-‎</html>
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let currentUser = null;
+let cart = [];
+
+const $ = id => document.getElementById(id);
+const show = (id, message) => {
+  $(id).textContent = message;
+  $(id).classList.remove("hidden");
+};
+
+function money(value) {
+  return Number(value).toLocaleString("fr-FR") + " FCFA";
+}
+
+async function loadCategories() {
+  const {data,error} = await db.from("categories").select("*").order("id");
+  if(error) {
+    $("category-list").textContent = "Impossible de charger les catégories.";
+    return;
+  }
+  $("category-list").innerHTML = "";
+  $("new-product-category").innerHTML = "";
+  (data || []).forEach(cat => {
+    const name = cat.name;
+    const div = document.createElement("div");
+    div.className = "category";
+    div.textContent = name;
+    $("category-list").appendChild(div);
+    const option = document.createElement("option");
+    option.value = cat.id;
+    option.textContent = name;
+    $("new-product-category").appendChild(option);
+  });
+  if(!data || !data.length) $("category-list").textContent = "Aucune catégorie enregistrée.";
+}
+
+async function loadProducts() {
+  const {data,error} = await db.from("products")
+    .select("id,name,description,price,image_url,stock")
+    .eq("status","active")
+    .order("name");
+  $("product-list").innerHTML = "";
+  if(error) {
+    $("product-message").textContent = "Erreur de chargement des produits.";
+    return;
+  }
+  if(!data || !data.length) {
+    $("product-message").textContent = "Aucun produit disponible pour le moment.";
+    return;
+  }
+  $("product-message").textContent = "";
+  data.forEach(p => {
+    const card = document.createElement("article");
+    card.className = "product";
+    const img = document.createElement("img");
+    img.src = p.image_url || "";
+    img.alt = p.name;
+    img.onerror = () => img.style.display = "none";
+    const info = document.createElement("div");
+    info.className = "product-info";
+    const title = document.createElement("h3");
+    title.textContent = p.name;
+    const desc = document.createElement("p");
+    desc.className = "muted";
+    desc.textContent = p.description || "";
+    const price = document.createElement("p");
+    price.className = "price";
+    price.textContent = money(p.price);
+    const button = document.createElement("button");
+    button.textContent = "Ajouter au panier";
+    button.onclick = () => addToCart(p);
+    info.append(title,desc,price,button);
+    card.append(img,info);
+    $("product-list").appendChild(card);
+  });
+}
+
+function addToCart(product) {
+  const found = cart.find(p => p.id === product.id);
+  if(found) found.quantity++;
+  else cart.push({...product,quantity:1});
+  renderCart();
+}
+
+function renderCart() {
+  $("cart-list").innerHTML = "";
+  let total = 0;
+  cart.forEach(p => {
+    total += Number(p.price) * p.quantity;
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = p.name + " — " + p.quantity + " × " + money(p.price);
+    const remove = document.createElement("button");
+    remove.textContent = "Retirer";
+    remove.onclick = () => {
+      cart = cart.filter(x => x.id !== p.id);
+      renderCart();
+    };
+    div.appendChild(remove);
+    $("cart-list").appendChild(div);
+  });
+  $("cart-total").textContent = "Total : " + money(total);
+}
+
+async function refreshAccount() {
+  const {data} = await db.auth.getUser();
+  currentUser = data.user;
+  if(currentUser) {
+    $("account-status").textContent = "Connecté : " + currentUser.email;
+    $("auth-forms").classList.add("hidden");
+    $("logout-button").classList.remove("hidden");
+    await loadSellerStores();
+  } else {
+    $("account-status").textContent = "Vous n'êtes pas connecté.";
+    $("auth-forms").classList.remove("hidden");
+    $("logout-button").classList.add("hidden");
+  }
+}
+
+$("signup-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const {data,error} = await db.auth.signUp({
+    email:$("signup-email").value,
+    password:$("signup-password").value,
+    options:{data:{
+      full_name:$("signup-name").value,
+      phone:$("signup-phone").value,
+      country:$("signup-country").value
+    }}
+  });
+  if(error) return show("auth-message",error.message);
+  if(data.user && data.session) {
+    await db.from("profiles").upsert({
+      id:data.user.id,
+      full_name:$("signup-name").value,
+      phone:$("signup-phone").value,
+      country:$("signup-country").value
+    });
+    await refreshAccount();
+    show("auth-message","Compte créé avec succès !");
+  } else {
+    show("auth-message","Compte créé. Vérifiez votre e-mail pour confirmer votre inscription, puis connectez-vous.");
+  }
+});
+
+$("login-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const {data,error} = await db.auth.signInWithPassword({
+    email:$("login-email").value,
+    password:$("login-password").value
+  });
+  if(error) return show("auth-message",error.message);
+  await db.from("profiles").upsert({
+    id:data.user.id,
+    full_name:data.user.user_metadata.full_name || "",
+    phone:data.user.user_metadata.phone || "",
+    country:data.user.user_metadata.country || "Burkina Faso"
+  });
+  await refreshAccount();
+  show("auth-message","Connexion réussie !");
+});
+
+$("logout-button").onclick = async () => {
+  await db.auth.signOut();
+  await refreshAccount();
+  show("auth-message","Vous êtes déconnecté.");
+};
+
+async function loadSellerStores() {
+  $("seller-store").innerHTML = "";
+  const {data,error} = await db.from("stores")
+    .select("id,name,status").eq("owner_id",currentUser.id);
+  if(error) return;
+  (data || []).forEach(store => {
+    const opt = document.createElement("option");
+    opt.value = store.id;
+    opt.textContent = store.name + " — " + store.status;
+    $("seller-store").appendChild(opt);
+  });
+}
+
+$("store-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  if(!currentUser) return show("store-message","Connectez-vous avant de demander une boutique.");
+  const {error} = await db.from("stores").insert({
+    owner_id:currentUser.id,
+    name:$("store-name").value,
+    description:$("store-description").value,
+    country:"Burkina Faso",
+    status:"pending"
+  });
+  if(error) return show("store-message",error.message);
+  show("store-message","Demande envoyée. Elle attend la validation de l'administrateur.");
+  $("store-form").reset();
+  await loadSellerStores();
+});
+
+$("product-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  if(!currentUser) return show("seller-message","Connectez-vous avant de proposer un produit.");
+  const storeId = $("seller-store").value;
+  if(!storeId) return show("seller-message","Vous devez d'abord créer une boutique.");
+  const {error} = await db.from("products").insert({
+    store_id:storeId,
+    category_id:Number($("new-product-category").value),
+    name:$("new-product-name").value,
+    description:$("new-product-description").value,
+    price:Number($("new-product-price").value),
+    image_url:$("new-product-image").value || null,
+    stock:Number($("new-product-stock").value),
+    status:"pending"
+  });
+  if(error) return show("seller-message",error.message);
+  show("seller-message","Produit soumis à validation par l'administrateur.");
+  $("product-form").reset();
+  await loadSellerStores();
+});
+
+async function isAdmin() {
+  const {data,error} = await db.rpc("is_admin");
+  return !error && data === true;
+}
+
+$("admin-load").onclick = async () => {
+  if(!currentUser) return show("admin-message","Connectez-vous avec votre compte administrateur.");
+  if(!await isAdmin()) return show("admin-message","Accès refusé : ce compte n'est pas administrateur.");
+  show("admin-message","Tableau de bord administrateur chargé.");
+  const {data:stores,error:storeError} = await db.from("stores")
+    .select("id,name,description,status,owner_id").eq("status","pending");
+  $("admin-stores").innerHTML = "";
+  if(storeError) $("admin-stores").textContent = storeError.message;
+  (stores || []).forEach(s => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = s.name + " — " + (s.description || "") + " — En attente";
+    const approve = document.createElement("button");
+    approve.textContent = "Approuver";
+    approve.onclick = () => updateStatus("stores",s.id,"approved");
+    const reject = document.createElement("button");
+    reject.textContent = "Refuser";
+    reject.onclick = () => updateStatus("stores",s.id,"rejected");
+    div.append(approve,reject);
+    $("admin-stores").appendChild(div);
+  });
+  const {data:products,error:productError} = await db.from("products")
+    .select("id,name,price,status").eq("status","pending");
+  $("admin-products").innerHTML = "";
+  if(productError) $("admin-products").textContent = productError.message;
+  (products || []).forEach(p => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = p.name + " — " + money(p.price) + " — En attente";
+    const approve = document.createElement("button");
+    approve.textContent = "Publier";
+    approve.onclick = () => updateStatus("products",p.id,"active");
+    const reject = document.createElement("button");
+    reject.textContent = "Refuser";
+    reject.onclick = () => updateStatus("products",p.id,"rejected");
+    div.append(approve,reject);
+    $("admin-products").appendChild(div);
+  });
+};
+
+async function updateStatus(table,id,status) {
+  const {error} = await db.from(table).update({status}).eq("id",id);
+  if(error) {
+    show("admin-message","Erreur : " + error.message);
+    return;
+  }
+  show("admin-message","Statut mis à jour.");
+  $("admin-load").click();
+}
+
+db.auth.onAuthStateChange(() => {
+  setTimeout(refreshAccount,0);
+});
+
+async function init() {
+  await loadCategories();
+  await loadProducts();
+  await refreshAccount();
+}
+init();
+</script>
+</body>
+  </html>
