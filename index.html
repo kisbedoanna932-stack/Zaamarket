@@ -478,6 +478,24 @@ async function updateStatus(table,id,status) {
   $("admin-load").click();
 }
 
+$("contact-form").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const {error} = await db.from("contact_messages").insert({
+    name: $("contact-name").value.trim(),
+    email: $("contact-email").value.trim(),
+    subject: $("contact-subject").value.trim(),
+    message: $("contact-message").value.trim()
+  });
+
+  if(error) {
+    return show("contact-feedback", "Erreur : " + error.message);
+  }
+
+  show("contact-feedback", "Merci ! Votre message a été envoyé avec succès.");
+  $("contact-form").reset();
+});
+ 
 db.auth.onAuthStateChange(() => {
   setTimeout(refreshAccount,0);
 });
