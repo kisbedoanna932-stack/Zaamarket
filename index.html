@@ -685,4 +685,84 @@ $("admin-load").onclick = async () => {
   }
 
   if(!messages || !messages.length) {
-    container.textContent = "Aucun message reçu pour le mom
+    container.textContent = "Aucun message reçu pour le moment.";
+  } else {
+    messages.forEach(m => {
+      const div = document.createElement("div");
+      div.className = "item";
+
+      const title = document.createElement("strong");
+      title.textContent = m.subject;
+
+      const name = document.createElement("p");
+      name.textContent = "Nom : " + m.name;
+
+      const email = document.createElement("p");
+      email.textContent = "E-mail : " + m.email;
+
+      const message = document.createElement("p");
+      message.textContent = m.message;
+
+      const date = document.createElement("p");
+      date.className = "muted";
+      date.textContent = new Date(m.created_at).toLocaleString("fr-FR");
+
+      div.append(title, name, email, message, date);
+      container.appendChild(div);
+    });
+  }
+};
+
+/* MODIFICATION DES STATUTS */
+
+async function updateStatus(table, id, status) {
+  const {error} = await db.from(table).update({status}).eq("id", id);
+
+  if(error) {
+    alert("Erreur : " + error.message);
+    return;
+  }
+
+  alert("Modification effectuée avec succès.");
+  $("admin-load").click();
+}
+
+/* FORMULAIRE DE CONTACT */
+
+$("contact-form").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const {error} = await db.from("contact_messages").insert({
+    name:$("contact-name").value.trim(),
+    email:$("contact-email").value.trim(),
+    subject:$("contact-subject").value.trim(),
+    message:$("contact-message").value.trim()
+  });
+
+  if(error) {
+    return show("contact-feedback", "Erreur : " + error.message);
+  }
+
+  show("contact-feedback", "Merci ! Votre message a été envoyé avec succès.");
+  $("contact-form").reset();
+});
+
+/* DÉMARRAGE DU SITE */
+
+async function startSite() {
+  try {
+    await loadCategories();
+    await loadProducts();
+    await refreshAccount();
+  } catch(error) {
+    console.error("Erreur au démarrage :", error);
+    $("account-status").textContent =
+      "Erreur de démarrage : " + error.message;
+  }
+}
+
+startSite();
+</script>
+
+</body>
+</html>
