@@ -432,46 +432,143 @@ async function isAdmin() {
   return !error && data === true;
 }
 
+
 $("admin-load").onclick = async () => {
   if(!currentUser) return show("admin-message","Connectez-vous avec votre compte administrateur.");
   if(!await isAdmin()) return show("admin-message","Accès refusé : ce compte n'est pas administrateur.");
+
   show("admin-message","Tableau de bord administrateur chargé.");
+
   const {data:stores,error:storeError} = await db.from("stores")
     .select("id,name,description,status,owner_id").eq("status","pending");
+
   $("admin-stores").innerHTML = "";
   if(storeError) $("admin-stores").textContent = storeError.message;
+
   (stores || []).forEach(s => {
     const div = document.createElement("div");
     div.className = "item";
     div.textContent = s.name + " — " + (s.description || "") + " — En attente";
+
     const approve = document.createElement("button");
     approve.textContent = "Approuver";
     approve.onclick = () => updateStatus("stores",s.id,"approved");
+
     const reject = document.createElement("button");
     reject.textContent = "Refuser";
     reject.onclick = () => updateStatus("stores",s.id,"rejected");
+
     div.append(approve,reject);
     $("admin-stores").appendChild(div);
   });
+
   const {data:products,error:productError} = await db.from("products")
     .select("id,name,price,status").eq("status","pending");
+
   $("admin-products").innerHTML = "";
   if(productError) $("admin-products").textContent = productError.message;
+
   (products || []).forEach(p => {
     const div = document.createElement("div");
     div.className = "item";
     div.textContent = p.name + " — " + money(p.price) + " — En attente";
+
     const approve = document.createElement("button");
     approve.textContent = "Publier";
     approve.onclick = () => updateStatus("products",p.id,"active");
+
     const reject = document.createElement("button");
     reject.textContent = "Refuser";
     reject.onclick = () => updateStatus("products",p.id,"rejected");
+
     div.append(approve,reject);
     $("admin-products").appendChild(div);
   });
-};
 
+  const {data:messages,error:messagesError} = await db
+    .from("contact_messages")
+    .select("id,name,email,subject,message,created_at")
+    .order("created_at",{ascending:false});
+
+  const container = $("admin-messages");
+  container.innerHTML = "";
+
+  if(messagesError) {
+    container.textContent = "Erreur : " + messagesError.message;
+    return;
+  }
+
+  if(!messages || !messages.length) {
+    container.textContent = "Aucun message reçu pour le moment.";
+  } else {
+    messages.forEach(m => {
+      const div = document.createElement("div");
+      div.className = "item";
+
+      const name = document.createElement("h4");
+      name.textContent = m.name;
+
+      const email = document.createElement("p");
+      email.textContent = "E-mail : " + m.email;
+
+      const subject = document.createElement("p");
+      subject.textContent = "Sujet : " + m.subject;
+
+      const message = document.createElement("p");
+      message.textContent = "Message : " + m.message;
+
+      const date = document.createElement("p");
+      date.className = "muted";
+      date.textContent = "Reçu le : " + new Date(m.created_at).toLocaleString("fr-FR");
+
+      div.append(name,email,subject,message,date);
+      container.appendChild(div);
+    });
+  }
+};
+ 
+
+  const {data:messages,error:messagesError} = await db
+    .from("contact_messages")
+    .select("id,name,email,subject,message,created_at")
+    .order("created_at",{ascending:false});
+
+  const container = $("admin-messages");
+  container.innerHTML = "";
+
+  if(messagesError) {
+    container.textContent = "Erreur : " + messagesError.message;
+    return;
+  }
+
+  if(!messages || !messages.length) {
+    container.textContent = "Aucun message reçu pour le moment.";
+  } else {
+    messages.forEach(m => {
+      const div = document.createElement("div");
+      div.className = "item";
+
+      const name = document.createElement("h4");
+      name.textContent = m.name;
+
+      const email = document.createElement("p");
+      email.textContent = "E-mail : " + m.email;
+
+      const subject = document.createElement("p");
+      subject.textContent = "Sujet : " + m.subject;
+
+      const message = document.createElement("p");
+      message.textContent = "Message : " + m.message;
+
+      const date = document.createElement("p");
+      date.className = "muted";
+      date.textContent = "Reçu le : " + new Date(m.created_at).toLocaleString("fr-FR");
+
+      div.append(name,email,subject,message,date);
+      container.appendChild(div);
+    });
+                           }
+ 
 async function updateStatus(table,id,status) {
   const {error} = await db.from(table).update({status}).eq("id",id);
   if(error) {
