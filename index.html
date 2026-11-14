@@ -163,7 +163,30 @@ footer{background:#171717;color:white;text-align:center;padding:28px 5%;font-siz
  <h3>Commandes</h3>
  <div class="muted">La gestion des commandes sera ajoutée dans une prochaine étape.</div>
 </section>
+ 
+<section id="contact">
+ <h2>Contactez-nous</h2>
+ <p class="muted">Une question ou un problème ? Notre équipe est à votre écoute.</p>
 
+ <form id="contact-form">
+  <label>Votre nom complet</label>
+  <input id="contact-name" type="text" required placeholder="Entrez votre nom">
+
+  <label>Votre adresse e-mail</label>
+  <input id="contact-email" type="email" required placeholder="exemple@email.com">
+
+  <label>Sujet de votre demande</label>
+  <input id="contact-subject" type="text" required placeholder="Objet de votre message">
+
+  <label>Votre message</label>
+  <textarea id="contact-message" required placeholder="Écrivez votre message ici..."></textarea>
+
+  <button type="submit">Envoyer mon message</button>
+ </form>
+
+ <div id="contact-feedback" class="message hidden"></div>
+</section>
+ 
 <section id="panier">
  <h2>Mon panier</h2>
  <div id="cart-list"></div>
