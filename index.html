@@ -265,7 +265,7 @@ function money(value) {
 
 async function refreshAccount() {
   const {data,error} = await db.auth.getUser();
-
+console.log("Utilisateur Supabase :", data.user);
   if(error) {
     currentUser = null;
   } else {
