@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#171717">
 <title>Zaamarket - La marketplace africaine</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;color:#171717}
@@ -28,7 +29,6 @@ h2{font-size:22px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
 .category,.product,.panel{background:white;border:1px solid #eee;border-radius:10px;padding:16px}
 .category{text-align:center;font-weight:bold}
-.category div{font-size:28px;margin-bottom:8px}
 .product{padding:0;overflow:hidden}
 .product img{width:100%;height:145px;object-fit:cover;background:#eee}
 .product-info{padding:12px}
@@ -40,13 +40,17 @@ textarea{min-height:75px}
 label{font-size:14px;font-weight:bold}
 .muted{color:#777;font-size:13px}
 .message{padding:12px;background:#fff3e9;border-radius:7px;margin:12px 0;font-size:14px}
-.item{background:white;padding:14px;border:1px solid #eee;border-radius:8px;margin:10px 0}
+.item{background:white;padding:14px;border:1px solid #eee;border-radius:8px;margin:10px 0;overflow-wrap:anywhere}
 .item button{margin:5px 5px 5px 0}
 footer{background:#171717;color:white;text-align:center;padding:28px 5%;font-size:13px}
 .hidden{display:none!important}
-@media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hero{padding:60px}}
+@media(min-width:700px){
+ .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .hero{padding:60px}
+}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -68,10 +72,13 @@ footer{background:#171717;color:white;text-align:center;padding:28px 5%;font-siz
 <section class="hero" id="accueil">
  <h1>Bienvenue sur <span>Zaamarket</span></h1>
  <p>Découvrez des produits variés à des prix accessibles, partout en Afrique de l'Ouest.</p>
- <button onclick="document.getElementById('produits').scrollIntoView({behavior:'smooth'})">Découvrir les produits</button>
+ <button onclick="document.getElementById('produits').scrollIntoView({behavior:'smooth'})">
+  Découvrir les produits
+ </button>
 </section>
 
 <main>
+
 <section id="categories">
  <h2>Nos catégories</h2>
  <div class="grid" id="category-list">
@@ -87,31 +94,41 @@ footer{background:#171717;color:white;text-align:center;padding:28px 5%;font-siz
 
 <section id="compte">
  <h2>Mon compte</h2>
- <div id="account-status" class="message">Vous n'êtes pas connecté.</div>
+ <div id="account-status" class="message">Vérification de la connexion...</div>
+
  <div id="auth-forms">
   <form id="signup-form">
    <h3>Créer un compte</h3>
    <label>Nom complet</label>
    <input id="signup-name" required placeholder="Votre nom complet">
+
    <label>Téléphone</label>
    <input id="signup-phone" placeholder="Votre numéro de téléphone">
+
    <label>Pays</label>
    <input id="signup-country" value="Burkina Faso" required>
+
    <label>Adresse e-mail</label>
    <input id="signup-email" type="email" required placeholder="Votre e-mail">
+
    <label>Mot de passe</label>
    <input id="signup-password" type="password" minlength="6" required placeholder="Au moins 6 caractères">
+
    <button type="submit">Créer mon compte</button>
   </form>
+
   <form id="login-form">
    <h3>Se connecter</h3>
    <label>Adresse e-mail</label>
    <input id="login-email" type="email" required>
+
    <label>Mot de passe</label>
    <input id="login-password" type="password" required>
+
    <button type="submit">Connexion</button>
   </form>
  </div>
+
  <button id="logout-button" class="hidden">Se déconnecter</button>
  <div id="auth-message" class="message hidden"></div>
 </section>
@@ -119,55 +136,73 @@ footer{background:#171717;color:white;text-align:center;padding:28px 5%;font-siz
 <section id="vendeur">
  <h2>Devenir vendeur</h2>
  <p class="muted">Proposez vos produits sur Zaamarket. Votre boutique sera vérifiée avant son ouverture.</p>
+
  <form id="store-form">
   <label>Nom de votre boutique</label>
   <input id="store-name" required>
+
   <label>Description de votre boutique</label>
   <textarea id="store-description"></textarea>
+
   <button type="submit">Envoyer ma demande</button>
  </form>
+
  <div id="store-message" class="message hidden"></div>
 </section>
 
 <section id="seller-products">
  <h2>Mes produits vendeur</h2>
+
  <form id="product-form">
   <label>Ma boutique</label>
   <select id="seller-store" required></select>
+
   <label>Nom du produit</label>
   <input id="new-product-name" required>
+
   <label>Description</label>
   <textarea id="new-product-description"></textarea>
+
   <label>Catégorie</label>
   <select id="new-product-category" required></select>
+
   <label>Prix en FCFA</label>
   <input id="new-product-price" type="number" min="1" required>
+
   <label>Adresse de l'image (URL)</label>
   <input id="new-product-image" type="url" placeholder="https://...">
+
   <label>Stock disponible</label>
   <input id="new-product-stock" type="number" min="0" value="0">
+
   <button type="submit">Soumettre le produit</button>
  </form>
+
  <div id="seller-message" class="message hidden"></div>
 </section>
 
 <section id="administration">
  <h2>Administration Zaamarket</h2>
  <p class="muted">Réservé au compte administrateur autorisé.</p>
+
  <button id="admin-load">Ouvrir le tableau de bord</button>
  <div id="admin-message" class="message hidden"></div>
+
  <h3>Demandes de boutiques</h3>
  <div id="admin-stores"></div>
+
  <h3>Produits en attente</h3>
  <div id="admin-products"></div>
+
  <h3>Commandes</h3>
  <div class="muted">La gestion des commandes sera ajoutée dans une prochaine étape.</div>
+
  <h3>Messages des clients</h3>
-<div id="admin-messages">
+ <div id="admin-messages">
   <p class="muted">Les messages des clients apparaîtront ici.</p>
-</div>
+ </div>
 </section>
- 
+
 <section id="contact">
  <h2>Contactez-nous</h2>
  <p class="muted">Une question ou un problème ? Notre équipe est à votre écoute.</p>
@@ -190,13 +225,14 @@ footer{background:#171717;color:white;text-align:center;padding:28px 5%;font-siz
 
  <div id="contact-feedback" class="message hidden"></div>
 </section>
- 
+
 <section id="panier">
  <h2>Mon panier</h2>
  <div id="cart-list"></div>
  <p id="cart-total"><strong>Total : 0 FCFA</strong></p>
  <p class="muted">Le paiement et la validation des commandes seront activés après la mise en place du processus de commande sécurisé.</p>
 </section>
+
 </main>
 
 <footer>
@@ -208,12 +244,14 @@ footer{background:#171717;color:white;text-align:center;padding:28px 5%;font-siz
 <script>
 const SUPABASE_URL = "https://xdbrxowpqymjmtqesohh.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_e60dqdlS0-iGOSX0MC-uWA_Rz7NPlfM";
+
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 let cart = [];
 
 const $ = id => document.getElementById(id);
+
 const show = (id, message) => {
   $(id).textContent = message;
   $(id).classList.remove("hidden");
@@ -223,99 +261,17 @@ function money(value) {
   return Number(value).toLocaleString("fr-FR") + " FCFA";
 }
 
-async function loadCategories() {
-  const {data,error} = await db.from("categories").select("*").order("id");
-  if(error) {
-    $("category-list").textContent = "Impossible de charger les catégories.";
-    return;
-  }
-  $("category-list").innerHTML = "";
-  $("new-product-category").innerHTML = "";
-  (data || []).forEach(cat => {
-    const name = cat.name;
-    const div = document.createElement("div");
-    div.className = "category";
-    div.textContent = name;
-    $("category-list").appendChild(div);
-    const option = document.createElement("option");
-    option.value = cat.id;
-    option.textContent = name;
-    $("new-product-category").appendChild(option);
-  });
-  if(!data || !data.length) $("category-list").textContent = "Aucune catégorie enregistrée.";
-}
-
-async function loadProducts() {
-  const {data,error} = await db.from("products")
-    .select("id,name,description,price,image_url,stock")
-    .eq("status","active")
-    .order("name");
-  $("product-list").innerHTML = "";
-  if(error) {
-    $("product-message").textContent = "Erreur de chargement des produits.";
-    return;
-  }
-  if(!data || !data.length) {
-    $("product-message").textContent = "Aucun produit disponible pour le moment.";
-    return;
-  }
-  $("product-message").textContent = "";
-  data.forEach(p => {
-    const card = document.createElement("article");
-    card.className = "product";
-    const img = document.createElement("img");
-    img.src = p.image_url || "";
-    img.alt = p.name;
-    img.onerror = () => img.style.display = "none";
-    const info = document.createElement("div");
-    info.className = "product-info";
-    const title = document.createElement("h3");
-    title.textContent = p.name;
-    const desc = document.createElement("p");
-    desc.className = "muted";
-    desc.textContent = p.description || "";
-    const price = document.createElement("p");
-    price.className = "price";
-    price.textContent = money(p.price);
-    const button = document.createElement("button");
-    button.textContent = "Ajouter au panier";
-    button.onclick = () => addToCart(p);
-    info.append(title,desc,price,button);
-    card.append(img,info);
-    $("product-list").appendChild(card);
-  });
-}
-
-function addToCart(product) {
-  const found = cart.find(p => p.id === product.id);
-  if(found) found.quantity++;
-  else cart.push({...product,quantity:1});
-  renderCart();
-}
-
-function renderCart() {
-  $("cart-list").innerHTML = "";
-  let total = 0;
-  cart.forEach(p => {
-    total += Number(p.price) * p.quantity;
-    const div = document.createElement("div");
-    div.className = "item";
-    div.textContent = p.name + " — " + p.quantity + " × " + money(p.price);
-    const remove = document.createElement("button");
-    remove.textContent = "Retirer";
-    remove.onclick = () => {
-      cart = cart.filter(x => x.id !== p.id);
-      renderCart();
-    };
-    div.appendChild(remove);
-    $("cart-list").appendChild(div);
-  });
-  $("cart-total").textContent = "Total : " + money(total);
-}
+/* CONNEXION ET COMPTE */
 
 async function refreshAccount() {
-  const {data} = await db.auth.getUser();
-  currentUser = data.user;
+  const {data,error} = await db.auth.getUser();
+
+  if(error) {
+    currentUser = null;
+  } else {
+    currentUser = data.user;
+  }
+
   if(currentUser) {
     $("account-status").textContent = "Connecté : " + currentUser.email;
     $("auth-forms").classList.add("hidden");
@@ -325,28 +281,37 @@ async function refreshAccount() {
     $("account-status").textContent = "Vous n'êtes pas connecté.";
     $("auth-forms").classList.remove("hidden");
     $("logout-button").classList.add("hidden");
+    $("seller-store").innerHTML = "";
   }
 }
 
+/* INSCRIPTION */
+
 $("signup-form").addEventListener("submit", async e => {
   e.preventDefault();
+
   const {data,error} = await db.auth.signUp({
-    email:$("signup-email").value,
+    email:$("signup-email").value.trim(),
     password:$("signup-password").value,
-    options:{data:{
-      full_name:$("signup-name").value,
-      phone:$("signup-phone").value,
-      country:$("signup-country").value
-    }}
+    options:{
+      data:{
+        full_name:$("signup-name").value.trim(),
+        phone:$("signup-phone").value.trim(),
+        country:$("signup-country").value.trim()
+      }
+    }
   });
+
   if(error) return show("auth-message",error.message);
+
   if(data.user && data.session) {
     await db.from("profiles").upsert({
       id:data.user.id,
-      full_name:$("signup-name").value,
-      phone:$("signup-phone").value,
-      country:$("signup-country").value
+      full_name:$("signup-name").value.trim(),
+      phone:$("signup-phone").value.trim(),
+      country:$("signup-country").value.trim()
     });
+
     await refreshAccount();
     show("auth-message","Compte créé avec succès !");
   } else {
@@ -354,34 +319,197 @@ $("signup-form").addEventListener("submit", async e => {
   }
 });
 
+/* CONNEXION */
+
 $("login-form").addEventListener("submit", async e => {
   e.preventDefault();
+
   const {data,error} = await db.auth.signInWithPassword({
-    email:$("login-email").value,
+    email:$("login-email").value.trim(),
     password:$("login-password").value
   });
-  if(error) return show("auth-message",error.message);
+
+  if(error) return show("auth-message","Erreur de connexion : " + error.message);
+
+  currentUser = data.user;
+
   await db.from("profiles").upsert({
     id:data.user.id,
     full_name:data.user.user_metadata.full_name || "",
     phone:data.user.user_metadata.phone || "",
     country:data.user.user_metadata.country || "Burkina Faso"
   });
+
   await refreshAccount();
   show("auth-message","Connexion réussie !");
 });
 
+/* DÉCONNEXION */
+
 $("logout-button").onclick = async () => {
-  await db.auth.signOut();
+  const {error} = await db.auth.signOut();
+
+  if(error) return show("auth-message",error.message);
+
   await refreshAccount();
   show("auth-message","Vous êtes déconnecté.");
 };
 
+/* SURVEILLANCE DE LA SESSION */
+
+db.auth.onAuthStateChange((_event,session) => {
+  currentUser = session ? session.user : null;
+
+  if(currentUser) {
+    $("account-status").textContent = "Connecté : " + currentUser.email;
+    $("auth-forms").classList.add("hidden");
+    $("logout-button").classList.remove("hidden");
+    loadSellerStores();
+  } else {
+    $("account-status").textContent = "Vous n'êtes pas connecté.";
+    $("auth-forms").classList.remove("hidden");
+    $("logout-button").classList.add("hidden");
+    $("seller-store").innerHTML = "";
+  }
+});
+
+/* CATÉGORIES */
+
+async function loadCategories() {
+  const {data,error} = await db.from("categories").select("*").order("id");
+
+  if(error) {
+    $("category-list").textContent = "Impossible de charger les catégories : " + error.message;
+    return;
+  }
+
+  $("category-list").innerHTML = "";
+  $("new-product-category").innerHTML = "";
+
+  (data || []).forEach(cat => {
+    const div = document.createElement("div");
+    div.className = "category";
+    div.textContent = cat.name;
+    $("category-list").appendChild(div);
+
+    const option = document.createElement("option");
+    option.value = cat.id;
+    option.textContent = cat.name;
+    $("new-product-category").appendChild(option);
+  });
+
+  if(!data || !data.length) {
+    $("category-list").textContent = "Aucune catégorie enregistrée.";
+  }
+}
+
+/* PRODUITS PUBLICS */
+
+async function loadProducts() {
+  const {data,error} = await db.from("products")
+    .select("id,name,description,price,image_url,stock")
+    .eq("status","active")
+    .order("name");
+
+  $("product-list").innerHTML = "";
+
+  if(error) {
+    $("product-message").textContent = "Erreur de chargement : " + error.message;
+    return;
+  }
+
+  if(!data || !data.length) {
+    $("product-message").textContent = "Aucun produit disponible pour le moment.";
+    return;
+  }
+
+  $("product-message").textContent = "";
+
+  data.forEach(p => {
+    const card = document.createElement("article");
+    card.className = "product";
+
+    const img = document.createElement("img");
+    img.src = p.image_url || "";
+    img.alt = p.name;
+    img.onerror = () => img.style.display = "none";
+
+    const info = document.createElement("div");
+    info.className = "product-info";
+
+    const title = document.createElement("h3");
+    title.textContent = p.name;
+
+    const desc = document.createElement("p");
+    desc.className = "muted";
+    desc.textContent = p.description || "";
+
+    const price = document.createElement("p");
+    price.className = "price";
+    price.textContent = money(p.price);
+
+    const button = document.createElement("button");
+    button.textContent = "Ajouter au panier";
+    button.onclick = () => addToCart(p);
+
+    info.append(title,desc,price,button);
+    card.append(img,info);
+    $("product-list").appendChild(card);
+  });
+}
+
+/* PANIER */
+
+function addToCart(product) {
+  const found = cart.find(p => p.id === product.id);
+
+  if(found) found.quantity++;
+  else cart.push({...product,quantity:1});
+
+  renderCart();
+}
+
+function renderCart() {
+  $("cart-list").innerHTML = "";
+  let total = 0;
+
+  cart.forEach(p => {
+    total += Number(p.price) * p.quantity;
+
+    const div = document.createElement("div");
+    div.className = "item";
+    div.textContent = p.name + " — " + p.quantity + " × " + money(p.price);
+
+    const remove = document.createElement("button");
+    remove.textContent = "Retirer";
+    remove.onclick = () => {
+      cart = cart.filter(x => x.id !== p.id);
+      renderCart();
+    };
+
+    div.appendChild(remove);
+    $("cart-list").appendChild(div);
+  });
+
+  $("cart-total").textContent = "Total : " + money(total);
+}
+
+/* BOUTIQUES DU VENDEUR */
+
 async function loadSellerStores() {
+  if(!currentUser) return;
+
   $("seller-store").innerHTML = "";
+
   const {data,error} = await db.from("stores")
-    .select("id,name,status").eq("owner_id",currentUser.id);
-  if(error) return;
+    .select("id,name,status")
+    .eq("owner_id",currentUser.id);
+
+  if(error) {
+    $("seller-store").textContent = "Erreur : " + error.message;
+    return;
+  }
+
   (data || []).forEach(store => {
     const opt = document.createElement("option");
     opt.value = store.id;
@@ -390,100 +518,158 @@ async function loadSellerStores() {
   });
 }
 
+/* DEMANDE DE BOUTIQUE */
+
 $("store-form").addEventListener("submit", async e => {
   e.preventDefault();
-  if(!currentUser) return show("store-message","Connectez-vous avant de demander une boutique.");
+
+  if(!currentUser) {
+    return show("store-message","Connectez-vous avant de demander une boutique.");
+  }
+
   const {error} = await db.from("stores").insert({
     owner_id:currentUser.id,
-    name:$("store-name").value,
-    description:$("store-description").value,
+    name:$("store-name").value.trim(),
+    description:$("store-description").value.trim(),
     country:"Burkina Faso",
     status:"pending"
   });
+
   if(error) return show("store-message",error.message);
+
   show("store-message","Demande envoyée. Elle attend la validation de l'administrateur.");
   $("store-form").reset();
   await loadSellerStores();
 });
 
+/* AJOUT D'UN PRODUIT */
+
 $("product-form").addEventListener("submit", async e => {
   e.preventDefault();
-  if(!currentUser) return show("seller-message","Connectez-vous avant de proposer un produit.");
+
+  if(!currentUser) {
+    return show("seller-message","Connectez-vous avant de proposer un produit.");
+  }
+
   const storeId = $("seller-store").value;
-  if(!storeId) return show("seller-message","Vous devez d'abord créer une boutique.");
+
+  if(!storeId) {
+    return show("seller-message","Vous devez d'abord créer une boutique.");
+  }
+
   const {error} = await db.from("products").insert({
     store_id:storeId,
     category_id:Number($("new-product-category").value),
-    name:$("new-product-name").value,
-    description:$("new-product-description").value,
+    name:$("new-product-name").value.trim(),
+    description:$("new-product-description").value.trim(),
     price:Number($("new-product-price").value),
     image_url:$("new-product-image").value || null,
     stock:Number($("new-product-stock").value),
     status:"pending"
   });
+
   if(error) return show("seller-message",error.message);
+
   show("seller-message","Produit soumis à validation par l'administrateur.");
   $("product-form").reset();
   await loadSellerStores();
 });
 
+/* VÉRIFICATION ADMINISTRATEUR */
+
 async function isAdmin() {
   const {data,error} = await db.rpc("is_admin");
-  return !error && data === true;
+
+  if(error) {
+    console.error("Erreur de vérification administrateur :",error.message);
+    return false;
+  }
+
+  return data === true;
 }
 
+/* TABLEAU DE BORD ADMINISTRATEUR */
 
 $("admin-load").onclick = async () => {
-  if(!currentUser) return show("admin-message","Connectez-vous avec votre compte administrateur.");
-  if(!await isAdmin()) return show("admin-message","Accès refusé : ce compte n'est pas administrateur.");
+  await refreshAccount();
+
+  if(!currentUser) {
+    return show("admin-message","Connectez-vous avec votre compte administrateur.");
+  }
+
+  if(!await isAdmin()) {
+    return show("admin-message","Accès refusé : ce compte n'est pas administrateur.");
+  }
 
   show("admin-message","Tableau de bord administrateur chargé.");
 
+  /* BOUTIQUES EN ATTENTE */
+
   const {data:stores,error:storeError} = await db.from("stores")
-    .select("id,name,description,status,owner_id").eq("status","pending");
+    .select("id,name,description,status,owner_id")
+    .eq("status","pending");
 
   $("admin-stores").innerHTML = "";
-  if(storeError) $("admin-stores").textContent = storeError.message;
 
-  (stores || []).forEach(s => {
-    const div = document.createElement("div");
-    div.className = "item";
-    div.textContent = s.name + " — " + (s.description || "") + " — En attente";
+  if(storeError) {
+    $("admin-stores").textContent = "Erreur : " + storeError.message;
+  } else {
+    (stores || []).forEach(s => {
+      const div = document.createElement("div");
+      div.className = "item";
+      div.textContent = s.name + " — " + (s.description || "") + " — En attente";
 
-    const approve = document.createElement("button");
-    approve.textContent = "Approuver";
-    approve.onclick = () => updateStatus("stores",s.id,"approved");
+      const approve = document.createElement("button");
+      approve.textContent = "Approuver";
+      approve.onclick = () => updateStatus("stores",s.id,"approved");
 
-    const reject = document.createElement("button");
-    reject.textContent = "Refuser";
-    reject.onclick = () => updateStatus("stores",s.id,"rejected");
+      const reject = document.createElement("button");
+      reject.textContent = "Refuser";
+      reject.onclick = () => updateStatus("stores",s.id,"rejected");
 
-    div.append(approve,reject);
-    $("admin-stores").appendChild(div);
-  });
+      div.append(approve,reject);
+      $("admin-stores").appendChild(div);
+    });
+
+    if(!stores || !stores.length) {
+      $("admin-stores").textContent = "Aucune demande de boutique en attente.";
+    }
+  }
+
+  /* PRODUITS EN ATTENTE */
 
   const {data:products,error:productError} = await db.from("products")
-    .select("id,name,price,status").eq("status","pending");
+    .select("id,name,price,status")
+    .eq("status","pending");
 
   $("admin-products").innerHTML = "";
-  if(productError) $("admin-products").textContent = productError.message;
 
-  (products || []).forEach(p => {
-    const div = document.createElement("div");
-    div.className = "item";
-    div.textContent = p.name + " — " + money(p.price) + " — En attente";
+  if(productError) {
+    $("admin-products").textContent = "Erreur : " + productError.message;
+  } else {
+    (products || []).forEach(p => {
+      const div = document.createElement("div");
+      div.className = "item";
+      div.textContent = p.name + " — " + money(p.price) + " — En attente";
 
-    const approve = document.createElement("button");
-    approve.textContent = "Publier";
-    approve.onclick = () => updateStatus("products",p.id,"active");
+      const approve = document.createElement("button");
+      approve.textContent = "Publier";
+      approve.onclick = () => updateStatus("products",p.id,"active");
 
-    const reject = document.createElement("button");
-    reject.textContent = "Refuser";
-    reject.onclick = () => updateStatus("products",p.id,"rejected");
+      const reject = document.createElement("button");
+      reject.textContent = "Refuser";
+      reject.onclick = () => updateStatus("products",p.id,"rejected");
 
-    div.append(approve,reject);
-    $("admin-products").appendChild(div);
-  });
+      div.append(approve,reject);
+      $("admin-products").appendChild(div);
+    });
+
+    if(!products || !products.length) {
+      $("admin-products").textContent = "Aucun produit en attente.";
+    }
+  }
+
+  /* MESSAGES DES CLIENTS : UNE SEULE COPIE */
 
   const {data:messages,error:messagesError} = await db
     .from("contact_messages")
@@ -499,114 +685,4 @@ $("admin-load").onclick = async () => {
   }
 
   if(!messages || !messages.length) {
-    container.textContent = "Aucun message reçu pour le moment.";
-  } else {
-    messages.forEach(m => {
-      const div = document.createElement("div");
-      div.className = "item";
-
-      const name = document.createElement("h4");
-      name.textContent = m.name;
-
-      const email = document.createElement("p");
-      email.textContent = "E-mail : " + m.email;
-
-      const subject = document.createElement("p");
-      subject.textContent = "Sujet : " + m.subject;
-
-      const message = document.createElement("p");
-      message.textContent = "Message : " + m.message;
-
-      const date = document.createElement("p");
-      date.className = "muted";
-      date.textContent = "Reçu le : " + new Date(m.created_at).toLocaleString("fr-FR");
-
-      div.append(name,email,subject,message,date);
-      container.appendChild(div);
-    });
-  }
-};
- 
-
-  const {data:messages,error:messagesError} = await db
-    .from("contact_messages")
-    .select("id,name,email,subject,message,created_at")
-    .order("created_at",{ascending:false});
-
-  const container = $("admin-messages");
-  container.innerHTML = "";
-
-  if(messagesError) {
-    container.textContent = "Erreur : " + messagesError.message;
-    return;
-  }
-
-  if(!messages || !messages.length) {
-    container.textContent = "Aucun message reçu pour le moment.";
-  } else {
-    messages.forEach(m => {
-      const div = document.createElement("div");
-      div.className = "item";
-
-      const name = document.createElement("h4");
-      name.textContent = m.name;
-
-      const email = document.createElement("p");
-      email.textContent = "E-mail : " + m.email;
-
-      const subject = document.createElement("p");
-      subject.textContent = "Sujet : " + m.subject;
-
-      const message = document.createElement("p");
-      message.textContent = "Message : " + m.message;
-
-      const date = document.createElement("p");
-      date.className = "muted";
-      date.textContent = "Reçu le : " + new Date(m.created_at).toLocaleString("fr-FR");
-
-      div.append(name,email,subject,message,date);
-      container.appendChild(div);
-    });
-                           }
- 
-async function updateStatus(table,id,status) {
-  const {error} = await db.from(table).update({status}).eq("id",id);
-  if(error) {
-    show("admin-message","Erreur : " + error.message);
-    return;
-  }
-  show("admin-message","Statut mis à jour.");
-  $("admin-load").click();
-}
-
-$("contact-form").addEventListener("submit", async e => {
-  e.preventDefault();
-
-  const {error} = await db.from("contact_messages").insert({
-    name: $("contact-name").value.trim(),
-    email: $("contact-email").value.trim(),
-    subject: $("contact-subject").value.trim(),
-    message: $("contact-message").value.trim()
-  });
-
-  if(error) {
-    return show("contact-feedback", "Erreur : " + error.message);
-  }
-
-  show("contact-feedback", "Merci ! Votre message a été envoyé avec succès.");
-  $("contact-form").reset();
-});
- 
-db.auth.onAuthStateChange(() => {
-  setTimeout(refreshAccount,0);
-});
-
-async function init() {
-  await loadCategories();
-  await loadProducts();
-  await refreshAccount();
-}
-init();
-</script>
-</body>
-  </html>
+    container.textContent = "Aucun message reçu pour le mom
