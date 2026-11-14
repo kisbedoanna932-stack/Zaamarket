@@ -764,6 +764,12 @@ async function startSite() {
 
 startSite();
 </script>
-
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("Zaamarket est prêt à être installé"))
+      .catch(error => console.error("Erreur :", error));
+  });
+}
 </body>
 </html>
